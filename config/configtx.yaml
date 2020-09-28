@@ -51,6 +51,40 @@ Organizations:
             - Host: blockchain-org4peer2
               Port: 30110
 
+Capabilities:
+    # Channel capabilities apply to both the orderers and the peers and must be
+    # supported by both.
+    # Set the value of the capability to true to require it.
+    Channel: &ChannelCapabilities
+        # V2.0 for Channel is a catchall flag for behavior which has been
+        # determined to be desired for all orderers and peers running at the v2.0.0
+        # level, but which would be incompatible with orderers and peers from
+        # prior releases.
+        # Prior to enabling V2.0 channel capabilities, ensure that all
+        # orderers and peers on a channel are at v2.0.0 or later.
+        V2_0: true
+
+    # Orderer capabilities apply only to the orderers, and may be safely
+    # used with prior release peers.
+    # Set the value of the capability to true to require it.
+    Orderer: &OrdererCapabilities
+        # V1.1 for Orderer is a catchall flag for behavior which has been
+        # determined to be desired for all orderers running at the v1.1.x
+        # level, but which would be incompatible with orderers from prior releases.
+        # Prior to enabling V2.0 orderer capabilities, ensure that all
+        # orderers on a channel are at v2.0.0 or later.
+        V2_0: true
+
+    # Application capabilities apply only to the peer network, and may be safely
+    # used with prior release orderers.
+    # Set the value of the capability to true to require it.
+    Application: &ApplicationCapabilities
+        # V2.0 for Application enables the new non-backwards compatible
+        # features and fixes of fabric v2.0.
+        # Prior to enabling V2.0 orderer capabilities, ensure that all
+        # orderers on a channel are at v2.0.0 or later.
+        V2_0: true
+
 Orderer: &OrdererDefaults
 
     OrdererType: etcdraft
@@ -67,8 +101,8 @@ Orderer: &OrdererDefaults
         Consenters:
             - Host: blockchain-orderer
               Port: 31010
-              ClientTLSCert: ../organizations/ordererOrganizations/example.com/orderers/blockchain-orderer/tls/server.crt
-              ServerTLSCert: ../organizations/ordererOrganizations/example.com/orderers/blockchain-orderer/tls/server.crt
+              ClientTLSCert: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+              ServerTLSCert: /fabric/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
                 
         Options:
             # TickInterval is the time interval between two Node.Tick invocations.
@@ -118,6 +152,53 @@ Application: &ApplicationDefaults
 
     Organizations:
 
+    Policies: &ApplicationDefaultPolicies
+    Readers:
+        Type: ImplicitMeta
+        Rule: "ANY Readers"
+    Writers:
+        Type: ImplicitMeta
+        Rule: "ANY Writers"
+    Admins:
+        Type: ImplicitMeta
+        Rule: "MAJORITY Admins"
+    LifecycleEndorsement:
+        Type: ImplicitMeta
+        Rule: "MAJORITY Endorsement"
+    Endorsement:
+        Type: ImplicitMeta
+        Rule: "MAJORITY Endorsement"
+
+    # Capabilities describes the application level capabilities, see the
+    # dedicated Capabilities section elsewhere in this file for a full
+    # description
+    Capabilities:
+        <<: *ApplicationCapabilities
+
+Channel: &ChannelDefaults
+    # Policies defines the set of policies at this level of the config tree
+    # For Channel policies, their canonical path is
+    #   /Channel/<PolicyName>
+    Policies:
+        # Who may invoke the 'Deliver' API
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        # Who may invoke the 'Broadcast' API
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        # By default, who may modify elements at this config level
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+
+    # Capabilities describes the channel level capabilities, see the
+    # dedicated Capabilities section elsewhere in this file for a full
+    # description
+    Capabilities:
+        <<: *ChannelCapabilities
+
 Profiles:
 
     FourOrgsOrdererGenesis:
@@ -125,6 +206,8 @@ Profiles:
             <<: *OrdererDefaults
             Organizations:
                 - *OrdererOrg
+            Capabilities:
+                <<: *OrdererCapabilities
         Consortiums:
             SampleConsortium:
                 Organizations:
@@ -134,6 +217,7 @@ Profiles:
                     - *Org4
     FourOrgsChannel:
         Consortium: SampleConsortium
+        <<: *ChannelDefaults
         Application:
             <<: *ApplicationDefaults
             Organizations:
@@ -141,4 +225,6 @@ Profiles:
                 - *Org2
                 - *Org3
                 - *Org4
+            Capabilities:
+                <<: *ApplicationCapabilities
 
