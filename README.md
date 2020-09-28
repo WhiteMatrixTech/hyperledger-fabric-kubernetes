@@ -751,7 +751,7 @@ spec:
         - mountPath: /host/var/run/docker.sock
           name: dockersocket
       - name: couchdb
-        image: hyperledger/fabric-couchdb:amd64-0.4.14
+        image: hyperledger/fabric-couchdb:amd64-0.4.21
         env:
         - name: TZ
           value: "America/Sao_Paulo"
@@ -875,7 +875,7 @@ spec:
         - mountPath: /host/var/run/docker.sock
           name: dockersocket
       - name: couchdb
-        image: hyperledger/fabric-couchdb:amd64-0.4.14
+        image: hyperledger/fabric-couchdb:amd64-0.4.21
         env:
         - name: TZ
           value: "America/Sao_Paulo"
@@ -1059,7 +1059,7 @@ spec:
         - mountPath: /host/var/run/docker.sock
           name: dockersocket
       - name: couchdb
-        image: hyperledger/fabric-couchdb:amd64-0.4.14
+        image: hyperledger/fabric-couchdb:amd64-0.4.21
         env:
         - name: TZ
           value: "America/Sao_Paulo"
@@ -1184,7 +1184,7 @@ spec:
         - mountPath: /host/var/run/docker.sock
           name: dockersocket
       - name: couchdb
-        image: hyperledger/fabric-couchdb:amd64-0.4.14
+        image: hyperledger/fabric-couchdb:amd64-0.4.21
         env:
         - name: TZ
           value: "America/Sao_Paulo"
@@ -1369,7 +1369,7 @@ spec:
         - mountPath: /host/var/run/docker.sock
           name: dockersocket
       - name: couchdb
-        image: hyperledger/fabric-couchdb:amd64-0.4.14
+        image: hyperledger/fabric-couchdb:amd64-0.4.21
         env:
         - name: TZ
           value: "America/Sao_Paulo"
@@ -1494,7 +1494,7 @@ spec:
         - mountPath: /host/var/run/docker.sock
           name: dockersocket
       - name: couchdb
-        image: hyperledger/fabric-couchdb:amd64-0.4.14
+        image: hyperledger/fabric-couchdb:amd64-0.4.21
         env:
         - name: TZ
           value: "America/Sao_Paulo"
@@ -1678,7 +1678,7 @@ spec:
         - mountPath: /host/var/run/docker.sock
           name: dockersocket
       - name: couchdb
-        image: hyperledger/fabric-couchdb:amd64-0.4.14
+        image: hyperledger/fabric-couchdb:amd64-0.4.21
         env:
         - name: TZ
           value: "America/Sao_Paulo"
@@ -1803,7 +1803,7 @@ spec:
         - mountPath: /host/var/run/docker.sock
           name: dockersocket
       - name: couchdb
-        image: hyperledger/fabric-couchdb:amd64-0.4.14
+        image: hyperledger/fabric-couchdb:amd64-0.4.21
         env:
         - name: TZ
           value: "America/Sao_Paulo"
