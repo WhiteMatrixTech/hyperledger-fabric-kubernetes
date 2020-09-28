@@ -53,7 +53,7 @@ Organizations:
 
 Orderer: &OrdererDefaults
 
-    OrdererType: kafka
+    OrdererType: etcdraft
     Addresses:
         - blockchain-orderer:31010
 
@@ -63,14 +63,56 @@ Orderer: &OrdererDefaults
         AbsoluteMaxBytes: 99 MB
         PreferredMaxBytes: 512 KB
 
-    Kafka:
-        Brokers:
-            - kafka1.local.parisi.biz:9092
-            - kafka2.local.parisi.biz:9092
-            - kafka3.local.parisi.biz:9092
-            - kafka4.local.parisi.biz:9092
+    EtcdRaft:
+        Consenters:
+            - Host: blockchain-orderer
+              Port: 31010
+              ClientTLSCert: ../organizations/ordererOrganizations/example.com/orderers/blockchain-orderer/tls/server.crt
+              ServerTLSCert: ../organizations/ordererOrganizations/example.com/orderers/blockchain-orderer/tls/server.crt
+                
+        Options:
+            # TickInterval is the time interval between two Node.Tick invocations.
+            TickInterval: 500ms
+
+            # ElectionTick is the number of Node.Tick invocations that must pass
+            # between elections. That is, if a follower does not receive any
+            # message from the leader of current term before ElectionTick has
+            # elapsed, it will become candidate and start an election.
+            # ElectionTick must be greater than HeartbeatTick.
+            ElectionTick: 10
+
+            # HeartbeatTick is the number of Node.Tick invocations that must
+            # pass between heartbeats. That is, a leader sends heartbeat
+            # messages to maintain its leadership every HeartbeatTick ticks.
+            HeartbeatTick: 1
+
+            # MaxInflightBlocks limits the max number of in-flight append messages
+            # during optimistic replication phase.
+            MaxInflightBlocks: 5
+
+            # SnapshotIntervalSize defines number of bytes per which a snapshot is taken
+            SnapshotIntervalSize: 16 MB
 
     Organizations:
+
+    # Policies defines the set of policies at this level of the config tree
+    # For Orderer policies, their canonical path is
+    #   /Channel/Orderer/<PolicyName>
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+        # BlockValidation specifies what signatures must be included in the block
+        # from the orderer for the peer to validate it.
+        BlockValidation:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
 
 Application: &ApplicationDefaults
 
